@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>Calculadora - Valor de la Edificación</title>
   
-  <!-- METADATOS PARA COMPORTAMIENTO NATIVO (APP) -->
+  <!-- METADATOS APP -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#1e293b" />
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -24,7 +24,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* RESET Y ESTILOS BASE */
     body { 
         font-family: 'Inter', sans-serif; 
         overscroll-behavior-y: none;
@@ -40,35 +39,37 @@
     
     #map { z-index: 0; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; }
     
-    /* Panel Transitions */
+    /* Animaciones del Panel */
     .panel-hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
     .panel-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
     
-    /* Asegurar visibilidad del botón toggle */
+    @media (min-width: 768px) {
+        .panel-hidden { transform: translateX(-100%); }
+        .panel-visible { transform: translateX(0); }
+    }
+
+    /* Asegurar que el botón de toggle esté siempre encima */
     #sideToggleBtn { z-index: 2000; }
   </style>
 </head>
 
 <body class="bg-gray-100 overflow-hidden relative h-screen w-screen">
 
-  <!-- PESTAÑA LATERAL ÚNICA (Visible cuando panel cerrado) -->
-  <button id="sideToggleBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-blue-600 w-8 h-16 rounded-r-lg shadow-lg border-y border-r border-gray-200 flex items-center justify-center hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 group hidden z-[2000]">
-    <i class="fa-solid fa-chevron-right text-lg"></i>
+  <!-- BOTÓN DE APERTURA (Visible solo cuando el panel está cerrado) -->
+  <button id="sideToggleBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-blue-600 w-10 h-16 rounded-r-xl shadow-xl border-y border-r border-gray-200 flex items-center justify-center hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 hidden">
+    <i class="fa-solid fa-chevron-right text-xl"></i>
   </button>
 
   <!-- CONTENEDOR UI -->
-  <div id="uiContainer" class="absolute inset-0 z-[1000] pointer-events-none flex flex-col justify-start items-start w-full h-full md:p-4 md:w-[500px]">
+  <div id="uiContainer" class="absolute inset-0 z-[1000] pointer-events-none flex flex-col justify-end md:justify-start items-start w-full h-full md:p-4 md:w-[500px]">
     
     <!-- PANEL PRINCIPAL -->
-    <!-- MÓVIL: Fixed inset-0 h-[100dvh] para ocupar TODA la pantalla sin márgenes -->
-    <!-- DESKTOP: Comportamiento sidebar con bordes redondeados -->
     <div id="mainPanel" class="panel-visible pointer-events-auto bg-white/95 backdrop-blur-md shadow-2xl flex flex-col fixed inset-0 w-full h-[100dvh] md:static md:h-[98%] md:w-full md:max-w-none md:rounded-2xl border-r border-white/20 overflow-hidden transition-all duration-300 ease-in-out z-[1050]">
       
-      <!-- HEADER (FIJO) -->
+      <!-- HEADER -->
       <div class="bg-slate-50/95 p-4 border-b border-gray-200 shrink-0 relative z-20">
         <div class="flex justify-between items-start mt-1">
             <div class="w-full pr-10">
-                <!-- TEXTO LEGAL -->
                 <div class="flex flex-col gap-0.5 mb-2">
                     <span class="text-[9px] font-bold text-blue-600 uppercase tracking-wider leading-tight">R.M. N° 172-2016-VIVIENDA</span>
                     <span class="text-[9px] font-bold text-blue-600 uppercase tracking-wider leading-tight">R.M. N° 277-2025-VIVIENDA</span>
@@ -84,8 +85,8 @@
                  <button onclick="resetCalculator()" class="text-xs text-red-500 bg-red-50 p-2.5 rounded-lg border border-red-100 active:bg-red-100 transition-colors" title="Reiniciar">
                     <i class="fa-solid fa-rotate-right text-sm"></i>
                 </button>
-                <!-- Botón cerrar -->
-                <button onclick="closePanel()" class="text-xs text-slate-500 bg-slate-100 p-2.5 rounded-lg border border-slate-200 active:bg-slate-200 transition-colors">
+                <!-- Botón CERRAR panel -->
+                <button onclick="togglePanel(false)" class="text-xs text-slate-500 bg-slate-100 p-2.5 rounded-lg border border-slate-200 active:bg-slate-200 transition-colors">
                     <i class="fa-solid fa-chevron-left text-sm md:text-base"></i>
                 </button>
             </div>
@@ -111,14 +112,14 @@
             <div class="flex flex-col gap-4">
                 <div>
                     <label class="text-xs text-slate-500 font-semibold mb-1 block">Material Predominante</label>
-                    <select id="materialSelect" onchange="updateDepreciationDisplay()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm h-11 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                    <select id="materialSelect" onchange="updateDepreciationDisplay()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm h-11 focus:border-blue-500 outline-none">
                         <option value="concreto">Concreto / Ladrillo</option>
                         <option value="adobe">Adobe / Quincha</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-xs text-slate-500 font-semibold mb-1 block">Estado de Conservación</label>
-                    <select id="estadoSelect" onchange="updateDepreciationDisplay()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm h-11 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+                    <select id="estadoSelect" onchange="updateDepreciationDisplay()" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm h-11 focus:border-blue-500 outline-none">
                         <option value="muy_bueno">Muy Bueno</option>
                         <option value="bueno">Bueno</option>
                         <option value="regular">Regular</option>
@@ -156,7 +157,7 @@
             <h3 class="text-sm font-bold text-slate-700 border-b pb-2 mb-2">3. Valores unitarios a costo directo</h3>
             <div class="flex flex-col gap-3">
                 <select id="obrasSelect" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs h-11 truncate focus:border-blue-500 outline-none">
-                    <!-- JS -->
+                    <!-- Se llena con JS -->
                 </select>
                 <div class="flex gap-2">
                     <input type="number" id="obraQty" placeholder="Cant." class="w-24 p-2.5 border border-slate-200 rounded-lg text-xs text-center h-11 focus:border-blue-500 outline-none">
@@ -233,7 +234,7 @@
           <p class="text-[10px] font-bold text-gray-500 tracking-wide">Elaborado por Lab Urban Risk</p>
           
           <div class="flex items-center gap-6">
-               <a href="https://musucancha-rgb.github.io/PERU.Valor_arancelario_terrenos/" target="_blank" class="text-orange-500 hover:text-orange-400 transition-transform transform hover:scale-110 active:scale-95" title="Ver Mapa Valores Arancelarios">
+               <a href="https://laburbanrisk.github.io/valor_arancelario/" target="_blank" class="text-orange-500 hover:text-orange-400 transition-transform transform hover:scale-110 active:scale-95" title="Ver Mapa Valores Arancelarios">
                     <i class="fa-solid fa-map-location-dot text-2xl"></i>
                 </a>
                 <div class="w-px h-6 bg-gray-700"></div>
@@ -247,53 +248,14 @@
     </div>
   </div>
 
-  <!-- MAPA -->
   <div id="map"></div>
 
   <!-- LEAFLET JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // --- VARIABLES DE UI ---
-    const sideToggleBtn = document.getElementById('sideToggleBtn');
-    const mainPanel = document.getElementById('mainPanel');
+    // --- 1. DEFINICIÓN DE DATOS (IMPORTANTE: AL PRINCIPIO) ---
     
-    // --- LÓGICA CALCULADORA ---
-    let currentObras = [];
-
-    // --- FUNCIONES UI ---
-    function closePanel() {
-        mainPanel.classList.remove('panel-visible');
-        mainPanel.classList.add('panel-hidden');
-        if(sideToggleBtn) sideToggleBtn.classList.remove('hidden');
-    }
-
-    function openPanel() {
-        mainPanel.classList.remove('panel-hidden');
-        mainPanel.classList.add('panel-visible');
-        if(sideToggleBtn) sideToggleBtn.classList.add('hidden');
-    }
-
-    // Listener único
-    if(sideToggleBtn) sideToggleBtn.addEventListener('click', openPanel);
-
-    // --- FUNCIONES DE ESTADO (Mover al principio para evitar errores de referencia) ---
-    function saveState() {
-        const state = {
-            region: document.getElementById('regionSelect').value,
-            material: document.getElementById('materialSelect').value,
-            estado: document.getElementById('estadoSelect').value,
-            antiguedad: document.getElementById('antiguedadInput').value,
-            area: document.getElementById('areaInput').value,
-            valorTerreno: document.getElementById('valorTerrenoInput').value, 
-            obras: currentObras
-        };
-        localStorage.setItem('calcState', JSON.stringify(state));
-    }
-
-    // --- DEFINICIÓN DE DATOS (Mover al principio para evitar errores de referencia) ---
-    
-    // Lista Maestra Obras (Completa con los 96 items proporcionados anteriormente y restaurados)
     const MASTER_OBRAS_LIST = [
         {id: 1, name: "Muro concreto armado, e=0.25m h=2.40m", unit: "m2", prices: {lima: 453.45, costa: 443.89, sierra: 444.14, selva: 457.72}},
         {id: 2, name: "Muro traslúcido (tipo UNI) / metálico h=2.40m", unit: "m2", prices: {lima: 417.73, costa: 408.92, sierra: 409.15, selva: 421.66}},
@@ -454,27 +416,52 @@
     // --- VARIABLES DE UI ---
     const sideToggleBtn = document.getElementById('sideToggleBtn');
     const mainPanel = document.getElementById('mainPanel');
-    
-    // --- LÓGICA CALCULADORA ---
+    const uiContainer = document.getElementById('uiContainer');
     let currentObras = [];
 
-    // --- FUNCIONES UI ---
-    function closePanel() {
-        mainPanel.classList.remove('panel-visible');
-        mainPanel.classList.add('panel-hidden');
-        if(sideToggleBtn) sideToggleBtn.classList.remove('hidden');
+    // --- FUNCIONES UI (TOGGLE) ---
+    function togglePanel(show) {
+        if (show === undefined) {
+            // Toggle
+            if (mainPanel.classList.contains('panel-hidden')) {
+                show = true;
+            } else {
+                show = false;
+            }
+        }
+
+        if (show) {
+            mainPanel.classList.remove('panel-hidden');
+            mainPanel.classList.add('panel-visible');
+            sideToggleBtn.classList.add('hidden'); // Ocultar botón lateral
+            uiContainer.classList.remove('pointer-events-none');
+        } else {
+            mainPanel.classList.remove('panel-visible');
+            mainPanel.classList.add('panel-hidden');
+            sideToggleBtn.classList.remove('hidden'); // Mostrar botón lateral
+            uiContainer.classList.add('pointer-events-none');
+        }
     }
 
-    function openPanel() {
-        mainPanel.classList.remove('panel-hidden');
-        mainPanel.classList.add('panel-visible');
-        if(sideToggleBtn) sideToggleBtn.classList.add('hidden');
+    // Event Listeners
+    sideToggleBtn.addEventListener('click', () => togglePanel(true));
+
+    // --- INIT ---
+    function init() {
+        // 1. Inicializar listas (Región por defecto)
+        updateRegion();
+        
+        // 2. Cargar estado guardado (si existe)
+        loadState();
+        
+        // 3. Ajuste inicial para móviles
+        if(window.innerWidth < 768) {
+            togglePanel(false); // Empezar cerrado
+        }
     }
 
-    // Listener único
-    if(sideToggleBtn) sideToggleBtn.addEventListener('click', openPanel);
+    // --- LÓGICA DE NEGOCIO ---
 
-    // --- FUNCIONES LÓGICAS ---
     function saveState() {
         const state = {
             region: document.getElementById('regionSelect').value,
@@ -488,36 +475,32 @@
         localStorage.setItem('calcState', JSON.stringify(state));
     }
 
-    function updateDepreciationDisplay() {
-        const mat = document.getElementById('materialSelect').value;
-        const est = document.getElementById('estadoSelect').value;
-        const age = parseInt(document.getElementById('antiguedadInput').value) || 0;
-        
-        const pct = getDepreciationPct(mat, est, age);
-        document.getElementById('deprecDisplay').innerText = pct + "%";
-        
-        saveState();
-    }
+    function loadState() {
+        const saved = localStorage.getItem('calcState');
+        if (saved) {
+            try {
+                const state = JSON.parse(saved);
+                if (state.region) document.getElementById('regionSelect').value = state.region;
+                
+                // Actualizar listas con la región cargada (sin resetear cálculos aún)
+                updateRegion(false); 
 
-    function getDepreciationPct(material, state, age) {
-        const stateMap = { 'muy_bueno': 0, 'bueno': 1, 'regular': 2, 'malo': 3 };
-        const stateIdx = stateMap[state];
-        
-        let tableData = (material === 'adobe') ? DEPRECIATION_DATA_ADOBE : DEPRECIATION_DATA_CONCRETO;
-        let years = Object.keys(tableData).map(Number).sort((a,b)=>a-b);
-        let validYear = years[0];
-        
-        for(let y of years) {
-            if (age >= y) validYear = y;
+                if (state.material) document.getElementById('materialSelect').value = state.material;
+                if (state.estado) document.getElementById('estadoSelect').value = state.estado;
+                if (state.antiguedad) document.getElementById('antiguedadInput').value = state.antiguedad;
+                if (state.area) document.getElementById('areaInput').value = state.area;
+                if (state.valorTerreno) document.getElementById('valorTerrenoInput').value = state.valorTerreno;
+                currentObras = state.obras || [];
+                
+                renderObrasList();
+                updateDepreciationDisplay();
+                // Opcional: Calcular si se quiere mostrar resultados al inicio
+                // calculate(); 
+                
+                return true;
+            } catch (e) { console.error("Error loading state", e); }
         }
-        
-        let row = tableData[validYear];
-        if (!row) {
-            validYear = years[years.length-1];
-            row = tableData[validYear];
-        }
-
-        return row[stateIdx];
+        return false;
     }
 
     function updateRegion(resetCats = true) {
@@ -526,6 +509,7 @@
         const container = document.getElementById('categoriesContainer');
         container.innerHTML = '';
         
+        // Generar Selects de Categorías
         data.components.forEach(comp => {
             let html = `
                 <div class="bg-slate-50 p-2.5 border border-slate-200 rounded-lg">
@@ -540,6 +524,7 @@
             container.innerHTML += html;
         });
 
+        // Generar Select de Obras
         const obrasSelect = document.getElementById('obrasSelect');
         obrasSelect.innerHTML = '<option value="">-- Seleccionar obra(s) y/o instalación(es) --</option>';
         MASTER_OBRAS_LIST.forEach(obra => {
@@ -554,7 +539,38 @@
         saveState();
     }
 
+    function updateDepreciationDisplay() {
+        const mat = document.getElementById('materialSelect').value;
+        const est = document.getElementById('estadoSelect').value;
+        const age = parseInt(document.getElementById('antiguedadInput').value) || 0;
+        
+        const pct = getDepreciationPct(mat, est, age);
+        document.getElementById('deprecDisplay').innerText = pct + "%";
+        saveState();
+    }
+
+    function getDepreciationPct(material, state, age) {
+        const stateMap = { 'muy_bueno': 0, 'bueno': 1, 'regular': 2, 'malo': 3 };
+        const stateIdx = stateMap[state];
+        let tableData = (material === 'adobe') ? DEPRECIATION_DATA_ADOBE : DEPRECIATION_DATA_CONCRETO;
+        
+        let years = Object.keys(tableData).map(Number).sort((a,b)=>a-b);
+        let validYear = years[0];
+        
+        for(let y of years) {
+            if (age >= y) validYear = y;
+        }
+        
+        let row = tableData[validYear];
+        if (!row) {
+            validYear = years[years.length-1];
+            row = tableData[validYear];
+        }
+        return row[stateIdx];
+    }
+
     function calculate() {
+        // 1. Sumar Unitarios
         let totalUnitario = 0;
         const selects = document.querySelectorAll('.category-select');
         selects.forEach(sel => {
@@ -565,15 +581,16 @@
             }
         });
         
-        const valorUnitarioElement = document.getElementById('valorUnitarioTotalDisplay');
-        if(valorUnitarioElement) valorUnitarioElement.innerText = totalUnitario.toFixed(2);
+        document.getElementById('valorUnitarioTotalDisplay').innerText = totalUnitario.toFixed(2);
 
+        // 2. Factor Depreciación
         const mat = document.getElementById('materialSelect').value;
         const est = document.getElementById('estadoSelect').value;
         const age = parseInt(document.getElementById('antiguedadInput').value) || 0;
         const deprecPct = getDepreciationPct(mat, est, age);
         const factorDepreciacion = 1 - (deprecPct / 100);
 
+        // 3. Subtotales
         const area = parseFloat(document.getElementById('areaInput').value) || 0;
         const subtotal1 = totalUnitario * area * factorDepreciacion;
         document.getElementById('subtotalEdif').innerText = "S/. " + subtotal1.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -582,10 +599,12 @@
         currentObras.forEach(o => subtotal2 += o.total);
         document.getElementById('subtotalObras').innerText = "S/. " + subtotal2.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
+        // 4. Total Edificación
         const totalEdificacion = subtotal1 + subtotal2;
         document.getElementById('totalFinal').innerText = "S/. " + totalEdificacion.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('displayEdificacionAuto').innerText = totalEdificacion.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
+        // 5. Predio
         calculatePredio(totalEdificacion);
         saveState();
     }
@@ -614,7 +633,7 @@
 
         const val = parseFloat(opt.getAttribute('data-val'));
         const name = opt.getAttribute('data-name');
-        const unit = opt.getAttribute('data-unit');
+        const unit = opt.getAttribute('data-unit'); // Ahora sí existe
 
         currentObras.push({
             id: Date.now(),
@@ -672,6 +691,7 @@
             updateRegion();
             updateDepreciationDisplay();
             
+            // Clear results manually
             document.getElementById('subtotalEdif').innerText = "S/. 0.00";
             document.getElementById('subtotalObras').innerText = "S/. 0.00";
             document.getElementById('totalFinal').innerText = "S/. 0.00";
@@ -680,36 +700,6 @@
             const valUnitElem = document.getElementById('valorUnitarioTotalDisplay');
             if(valUnitElem) valUnitElem.innerText = "0.00";
         }
-    }
-
-    function loadState() {
-        const saved = localStorage.getItem('calcState');
-        if (saved) {
-            try {
-                const state = JSON.parse(saved);
-                if (state.region) document.getElementById('regionSelect').value = state.region;
-                updateRegion(false);
-
-                if (state.material) document.getElementById('materialSelect').value = state.material;
-                if (state.estado) document.getElementById('estadoSelect').value = state.estado;
-                if (state.antiguedad) document.getElementById('antiguedadInput').value = state.antiguedad;
-                if (state.area) document.getElementById('areaInput').value = state.area;
-                if (state.valorTerreno) document.getElementById('valorTerrenoInput').value = state.valorTerreno;
-                currentObras = state.obras || [];
-                
-                renderObrasList();
-                updateDepreciationDisplay();
-                
-                return true;
-            } catch (e) { console.error("Error loading state", e); }
-        }
-        return false;
-    }
-
-    function init() {
-        updateRegion();
-        loadState();
-        if(window.innerWidth < 768) closePanel();
     }
 
     // --- MAPA ---
@@ -750,16 +740,16 @@
         document.getElementById('selectedDistrictDisplay').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${props.distrito || "Distrito"} (${region.toUpperCase()})`;
         
         updateRegion(true);
-        if(window.innerWidth < 768) openPanel();
+        if(window.innerWidth < 768) {
+            togglePanel(true); // Abrir panel en móvil al seleccionar
+        }
         
-        if (selectedLayer) geojson.resetStyle(selectedLayer);
-        selectedLayer = layer;
-        layer.setStyle({ weight: 2, color: '#0047FF', fillColor: '#0047FF', fillOpacity: 0.8 });
-        layer.bringToFront();
+        if (typeof geojson !== 'undefined' && geojson) {
+             // Resetear estilos anteriores si se desea
+        }
+        
         map.flyToBounds(layer.getBounds(), { padding: [20, 20], maxZoom: 13, duration: 1.2 });
     }
-    
-    let selectedLayer = null;
 
     fetch("distritos_mef_2026_con_zip.geojson")
       .then(r => { if (!r.ok) throw new Error("Err"); return r.json(); })
@@ -776,6 +766,7 @@
       })
       .catch(err => { });
 
+    // INICIAR
     init();
 
   </script>
