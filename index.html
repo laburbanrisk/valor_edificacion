@@ -41,10 +41,9 @@
     #map { z-index: 0; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; }
     
     /* Panel Transitions */
-    .panel-hidden { transform: translateX(-100%); opacity: 0; pointer-events: none; }
-    .panel-visible { transform: translateX(0); opacity: 1; pointer-events: auto; }
+    .panel-hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
+    .panel-visible { transform: translateY(0); opacity: 1; pointer-events: auto; }
     
-    /* En móvil usamos translate Y o X según diseño, aquí unificamos a lateral para consistencia */
     /* Asegurar visibilidad del botón toggle */
     #sideToggleBtn { z-index: 2000; }
   </style>
@@ -234,7 +233,7 @@
           <p class="text-[10px] font-bold text-gray-500 tracking-wide">Elaborado por Lab Urban Risk</p>
           
           <div class="flex items-center gap-6">
-               <a href="https://laburbanrisk.github.io/valor_arancelario/" target="_blank" class="text-orange-500 hover:text-orange-400 transition-transform transform hover:scale-110 active:scale-95" title="Ver Mapa Valores Arancelarios">
+               <a href="https://musucancha-rgb.github.io/PERU.Valor_arancelario_terrenos/" target="_blank" class="text-orange-500 hover:text-orange-400 transition-transform transform hover:scale-110 active:scale-95" title="Ver Mapa Valores Arancelarios">
                     <i class="fa-solid fa-map-location-dot text-2xl"></i>
                 </a>
                 <div class="w-px h-6 bg-gray-700"></div>
@@ -491,7 +490,6 @@
         const stateIdx = stateMap[state];
         
         let tableData = (material === 'adobe') ? DEPRECIATION_DATA_ADOBE : DEPRECIATION_DATA_CONCRETO;
-        
         let years = Object.keys(tableData).map(Number).sort((a,b)=>a-b);
         let validYear = years[0];
         
