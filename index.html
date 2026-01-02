@@ -277,6 +277,20 @@
     // Listener único
     if(sideToggleBtn) sideToggleBtn.addEventListener('click', openPanel);
 
+    // --- FUNCIONES DE ESTADO (Mover al principio para evitar errores de referencia) ---
+    function saveState() {
+        const state = {
+            region: document.getElementById('regionSelect').value,
+            material: document.getElementById('materialSelect').value,
+            estado: document.getElementById('estadoSelect').value,
+            antiguedad: document.getElementById('antiguedadInput').value,
+            area: document.getElementById('areaInput').value,
+            valorTerreno: document.getElementById('valorTerrenoInput').value, 
+            obras: currentObras
+        };
+        localStorage.setItem('calcState', JSON.stringify(state));
+    }
+
     // --- DEFINICIÓN DE DATOS (Mover al principio para evitar errores de referencia) ---
     
     // Lista Maestra Obras (Completa con los 96 items proporcionados anteriormente y restaurados)
