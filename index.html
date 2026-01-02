@@ -158,7 +158,7 @@
         <section class="space-y-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
             <h3 class="text-sm font-bold text-slate-700 border-b pb-1">3. Valores unitarios a costo directo</h3>
             <div class="flex flex-col gap-2">
-                <select id="obrasSelect" class="w-full p-2 bg-slate-50 border rounded-lg text-xs h-10">
+                <select id="obrasSelect" class="w-full p-2 bg-slate-50 border rounded-lg text-xs h-10 truncate">
                     <!-- Dinámico - Se llenará vía JS -->
                 </select>
                 <div class="flex gap-2">
@@ -306,11 +306,104 @@
         return false;
     }
 
-    // --- DATOS MAESTROS ---
+    // --- DATOS MAESTROS COMPLETOS (96 ÍTEMS) ---
+    // NOTA: Se han añadido las unidades correctas según los anexos
     const MASTER_OBRAS_LIST = [
         {id: 1, name: "Muro concreto armado, e=0.25m h=2.40m", unit: "m2", prices: {lima: 453.45, costa: 443.89, sierra: 444.14, selva: 457.72}},
         {id: 2, name: "Muro traslúcido (tipo UNI) / metálico h=2.40m", unit: "m2", prices: {lima: 417.73, costa: 408.92, sierra: 409.15, selva: 421.66}},
-        // ... (resto de ítems) ...
+        {id: 3, name: "Muro ladrillo tarrajeado, col. concreto h>2.40m", unit: "m2", prices: {lima: 383.77, costa: 375.68, sierra: 375.89, selva: 387.38}},
+        {id: 4, name: "Muro ladrillo tarrajeado, col. concreto h<=2.40m", unit: "m2", prices: {lima: 336.07, costa: 328.99, sierra: 329.17, selva: 339.24}},
+        {id: 5, name: "Muro ladrillo solaqueado, col. concreto h<=2.40m", unit: "m2", prices: {lima: 281.01, costa: 275.09, sierra: 275.24, selva: 283.66}},
+        {id: 6, name: "Cerco de fierro/aluminio", unit: "m2", prices: {lima: 206.30, costa: 201.95, sierra: 202.06, selva: 208.24}},
+        {id: 7, name: "Muro ladrillo soga, cimentación", unit: "m2", prices: {lima: 235.30, costa: 230.34, sierra: 230.47, selva: 237.52}},
+        {id: 8, name: "Muro adobe, tapial o quincha tarrajeado", unit: "m2", prices: {lima: 150.76, costa: 147.58, sierra: 147.66, selva: 152.18}},
+        {id: 9, name: "Muro ladrillo cabeza, col. concreto h<=2.40m", unit: "m2", prices: {lima: 408.56, costa: 399.95, sierra: 400.17, selva: 412.41}},
+        {id: 10, name: "Puerta fierro/aluminio h=2.20m ancho<=2.00m", unit: "m2", prices: {lima: 618.00, costa: 604.98, sierra: 605.31, selva: 623.83}},
+        {id: 11, name: "Puerta fierro plancha h=2.20m ancho>2.00m", unit: "m2", prices: {lima: 590.41, costa: 577.96, sierra: 578.28, selva: 595.97}},
+        {id: 12, name: "Portón fierro plancha h>3.00m hasta 4.00m", unit: "m2", prices: {lima: 427.48, costa: 418.47, sierra: 418.70, selva: 468.54}},
+        {id: 13, name: "Puerta madera h=2.20m ancho<=2.00m", unit: "m2", prices: {lima: 449.15, costa: 439.68, sierra: 439.92, selva: 483.88}},
+        {id: 14, name: "Puerta madera h=2.20m ancho>2.00m", unit: "m2", prices: {lima: 404.21, costa: 395.68, sierra: 395.90, selva: 435.47}},
+        {id: 15, name: "Portón fierro plancha h<=3.00m", unit: "m2", prices: {lima: 360.87, costa: 353.26, sierra: 353.46, selva: 394.83}},
+        {id: 16, name: "Portón fierro plancha h>4.00m", unit: "m2", prices: {lima: 321.02, costa: 314.25, sierra: 314.43, selva: 351.30}},
+        {id: 17, name: "Tanque elevado concreto <= 5m3", unit: "m3", prices: {lima: 1316.09, costa: 1288.35, sierra: 1289.07, selva: 1328.49}},
+        {id: 18, name: "Tanque elevado plástico/fibra > 1m3", unit: "m3", prices: {lima: 1439.21, costa: 1408.88, sierra: 1409.66, selva: 1452.77}},
+        {id: 19, name: "Tanque elevado concreto > 5m3", unit: "m3", prices: {lima: 1103.04, costa: 1079.79, sierra: 1080.39, selva: 1113.43}},
+        {id: 20, name: "Tanque elevado concreto > 15m3", unit: "m3", prices: {lima: 977.16, costa: 956.56, sierra: 957.09, selva: 986.37}},
+        {id: 21, name: "Tanque elevado plástico/fibra <= 1m3", unit: "m3", prices: {lima: 1083.70, costa: 1060.86, sierra: 1061.45, selva: 1093.91}},
+        {id: 22, name: "Cisterna plástico/fibra > 1m3", unit: "m3", prices: {lima: 1483.42, costa: 1452.15, sierra: 1452.95, selva: 1497.39}},
+        {id: 23, name: "Cisterna concreto <= 5m3", unit: "m3", prices: {lima: 1488.89, costa: 1457.50, sierra: 1458.31, selva: 1502.91}},
+        {id: 24, name: "Cisterna concreto <= 10m3", unit: "m3", prices: {lima: 1241.37, costa: 1215.21, sierra: 1215.88, selva: 1253.07}},
+        {id: 25, name: "Cisterna concreto <= 20m3", unit: "m3", prices: {lima: 1092.61, costa: 1069.58, sierra: 1070.17, selva: 1102.90}},
+        {id: 26, name: "Cisterna, pozo ladrillo tarrajeado <= 5m3", unit: "m3", prices: {lima: 1176.91, costa: 1152.10, sierra: 1152.74, selva: 1188.00}},
+        {id: 27, name: "Cisterna concreto > 20m3", unit: "m3", prices: {lima: 901.92, costa: 882.91, sierra: 883.40, selva: 910.42}},
+        {id: 28, name: "Tanque plástico/fibra <= 1m3", unit: "m3", prices: {lima: 904.36, costa: 885.30, sierra: 885.79, selva: 912.88}},
+        {id: 29, name: "Piscina concreto c/mayólica <= 5m3", unit: "m3", prices: {lima: 1483.41, costa: 1452.14, sierra: 1452.94, selva: 1497.38}},
+        {id: 30, name: "Piscina concreto c/mayólica <= 10m3", unit: "m3", prices: {lima: 1236.70, costa: 1210.63, sierra: 1211.30, selva: 1248.35}},
+        {id: 31, name: "Piscina concreto c/mayólica > 10m3", unit: "m3", prices: {lima: 1182.92, costa: 1157.99, sierra: 1158.63, selva: 1194.07}},
+        {id: 32, name: "Piscina ladrillo KK c/pintura", unit: "m3", prices: {lima: 1019.30, costa: 997.81, sierra: 998.37, selva: 1028.90}},
+        {id: 33, name: "Losa concreto armado e=4\"", unit: "m2", prices: {lima: 170.50, costa: 166.91, sierra: 167.00, selva: 172.11}},
+        {id: 34, name: "Asfalto e=2\"", unit: "m2", prices: {lima: 141.85, costa: 138.86, sierra: 138.93, selva: 143.18}},
+        {id: 35, name: "Losa concreto simple e=4\"", unit: "m2", prices: {lima: 136.11, costa: 133.25, sierra: 133.32, selva: 137.40}},
+        {id: 36, name: "Vereda concreto e=4\"", unit: "m2", prices: {lima: 107.31, costa: 105.05, sierra: 105.10, selva: 108.32}},
+        {id: 37, name: "Horno concreto armado/refractario", unit: "m3", prices: {lima: 1596.70, costa: 1563.04, sierra: 1563.91, selva: 1611.74}},
+        {id: 38, name: "Horno ladrillo/refractario", unit: "m3", prices: {lima: 1346.81, costa: 1318.42, sierra: 1319.15, selva: 1359.50}},
+        {id: 39, name: "Horno adobe", unit: "m3", prices: {lima: 402.14, costa: 393.67, sierra: 393.88, selva: 405.93}},
+        {id: 40, name: "Torre de vigilancia (concreto)", unit: "und", prices: {lima: 7081.57, costa: 6932.30, sierra: 6936.14, selva: 7148.29}},
+        {id: 41, name: "Estructura concreto (sin torre)", unit: "und", prices: {lima: 4208.44, costa: 4119.73, sierra: 4122.01, selva: 4248.09}},
+        {id: 42, name: "Bóveda concreto armado reforzado", unit: "m3", prices: {lima: 1529.53, costa: 1497.29, sierra: 1498.12, selva: 1543.94}},
+        {id: 43, name: "Balanza industrial concreto", unit: "m3", prices: {lima: 869.64, costa: 851.31, sierra: 851.78, selva: 877.84}},
+        {id: 44, name: "Poste concreto/fierro con reflector", unit: "und", prices: {lima: 2583.43, costa: 2528.97, sierra: 2530.37, selva: 2607.76}},
+        {id: 45, name: "Dados concreto (soporte máquinas)", unit: "m3", prices: {lima: 1808.83, costa: 1770.71, sierra: 1771.69, selva: 1825.88}},
+        {id: 46, name: "Caja registro 24\"x24\"", unit: "und", prices: {lima: 342.64, costa: 335.41, sierra: 335.60, selva: 345.86}},
+        {id: 47, name: "Caja registro 12\"x24\"", unit: "und", prices: {lima: 332.67, costa: 325.66, sierra: 325.84, selva: 335.80}},
+        {id: 48, name: "Caja registro 10\"x20\"", unit: "und", prices: {lima: 284.29, costa: 278.30, sierra: 278.46, selva: 286.97}},
+        {id: 49, name: "Buzón de concreto standard", unit: "und", prices: {lima: 2518.08, costa: 2465.00, sierra: 2466.37, selva: 2541.80}},
+        {id: 50, name: "Parapeto ladrillo cabeza tarrajeado", unit: "m2", prices: {lima: 243.42, costa: 238.29, sierra: 238.42, selva: 245.71}},
+        {id: 51, name: "Parapeto ladrillo soga tarrajeado", unit: "m2", prices: {lima: 197.06, costa: 192.91, sierra: 193.01, selva: 198.92}},
+        {id: 52, name: "Parapeto ladrillo cabeza caravista", unit: "m2", prices: {lima: 169.09, costa: 165.52, sierra: 180.02, selva: 170.68}},
+        {id: 53, name: "Parapeto ladrillo soga caravista", unit: "m2", prices: {lima: 111.12, costa: 108.78, sierra: 108.84, selva: 112.17}},
+        {id: 54, name: "Escalera concreto armado c/acabados", unit: "m3", prices: {lima: 6133.92, costa: 6004.63, sierra: 6007.96, selva: 6191.71}},
+        {id: 55, name: "Escalera concreto armado s/acabados", unit: "m3", prices: {lima: 4954.27, costa: 4849.84, sierra: 4852.53, selva: 5000.95}},
+        {id: 56, name: "Rampa/Grada concreto c/encofrado", unit: "m3", prices: {lima: 2126.08, costa: 2081.27, sierra: 2082.42, selva: 2146.11}},
+        {id: 57, name: "Rampa concreto s/encofrado", unit: "m3", prices: {lima: 1735.70, costa: 1699.11, sierra: 1700.05, selva: 1752.05}},
+        {id: 58, name: "Muro contención concreto h=1.40m e=20cm", unit: "m3", prices: {lima: 1516.06, costa: 1484.10, sierra: 1484.92, selva: 1530.34}},
+        {id: 59, name: "Muro contención concreto h=2.50m e=20cm", unit: "m3", prices: {lima: 1345.55, costa: 1317.19, sierra: 1317.92, selva: 1358.23}},
+        {id: 60, name: "Muro contención concreto h=4.00m e=20cm", unit: "m3", prices: {lima: 1317.51, costa: 1289.74, sierra: 1290.45, selva: 1329.92}},
+        {id: 61, name: "Muro contención concreto h=1.40m e=15cm", unit: "m3", prices: {lima: 1313.51, costa: 1285.82, sierra: 1286.53, selva: 1325.88}},
+        {id: 62, name: "Muro contención concreto h=2.50m e=15cm", unit: "m3", prices: {lima: 1125.98, costa: 1102.24, sierra: 1102.86, selva: 1136.59}},
+        {id: 63, name: "Muro contención concreto h=4.00m e=15cm", unit: "m3", prices: {lima: 1091.29, costa: 1068.29, sierra: 1068.88, selva: 1101.58}},
+        {id: 64, name: "Escalera caracol metálica h=6.00m", unit: "und", prices: {lima: 9041.42, costa: 8850.84, sierra: 8855.75, selva: 9126.61}},
+        {id: 65, name: "Escalera caracol metálica h=3.00m", unit: "und", prices: {lima: 4749.91, costa: 4649.79, sierra: 4652.37, selva: 4794.66}},
+        {id: 66, name: "Escalera caracol metálica h=3.00m (entre pisos)", unit: "und", prices: {lima: 4291.51, costa: 4201.05, sierra: 4203.38, selva: 4331.95}},
+        {id: 67, name: "Pastorales h=2.20m", unit: "und", prices: {lima: 519.47, costa: 508.52, sierra: 508.80, selva: 524.37}},
+        {id: 68, name: "Proyector luminaria 250W vapor sodio", unit: "und", prices: {lima: 1054.39, costa: 1032.16, sierra: 1032.74, selva: 1064.32}},
+        {id: 69, name: "Proyector luminaria 150W vapor mercurio", unit: "und", prices: {lima: 980.80, costa: 960.13, sierra: 960.66, selva: 990.04}},
+        {id: 70, name: "Tubería concreto armado D=1.20m", unit: "ml", prices: {lima: 583.29, costa: 570.99, sierra: 571.31, selva: 588.78}},
+        {id: 71, name: "Tubería concreto D=18\" (45cm)", unit: "ml", prices: {lima: 369.50, costa: 361.71, sierra: 361.91, selva: 372.98}},
+        {id: 72, name: "Canaleta de concreto sin rejillas", unit: "ml", prices: {lima: 82.97, costa: 81.22, sierra: 81.27, selva: 83.75}},
+        {id: 73, name: "Zanja concreto armado (talleres)", unit: "ml", prices: {lima: 926.72, costa: 907.19, sierra: 907.69, selva: 935.45}},
+        {id: 74, name: "Poste concreto 12.00m + reflector", unit: "pza", prices: {lima: 5117.80, costa: 5009.92, sierra: 5012.70, selva: 5166.01}},
+        {id: 75, name: "Poste concreto 11.00m + reflector", unit: "pza", prices: {lima: 4199.26, costa: 4110.74, sierra: 4113.02, selva: 4238.82}},
+        {id: 76, name: "Poste concreto 10.00m + reflector", unit: "pza", prices: {lima: 3629.07, costa: 3552.58, sierra: 3554.55, selva: 3663.26}},
+        {id: 77, name: "Poste concreto 9.00m + reflector", unit: "pza", prices: {lima: 3001.16, costa: 2937.90, sierra: 2939.53, selva: 3029.44}},
+        {id: 78, name: "Poste concreto 8.00m + reflector", unit: "pza", prices: {lima: 2583.43, costa: 2528.97, sierra: 2530.37, selva: 2607.76}},
+        {id: 79, name: "Poste concreto 7.00m + reflector", unit: "pza", prices: {lima: 2110.21, costa: 2065.73, sierra: 2066.88, selva: 2130.10}},
+        {id: 80, name: "Poste concreto 3.00m + reflector", unit: "pza", prices: {lima: 964.46, costa: 944.13, sierra: 944.66, selva: 973.55}},
+        {id: 81, name: "Cubierta tejas arcilla o similar", unit: "m2", prices: {lima: 134.24, costa: 140.27, sierra: 142.91, selva: 144.61}},
+        {id: 82, name: "Cubierta ladrillo pastelero mezcla 1:5", unit: "m2", prices: {lima: 77.08, costa: 75.46, sierra: 75.50, selva: 77.81}},
+        {id: 83, name: "Cubierta ladrillo pastelero barro", unit: "m2", prices: {lima: 73.84, costa: 72.28, sierra: 72.32, selva: 74.53}},
+        {id: 84, name: "Cubierta torta de barro 2\"", unit: "m2", prices: {lima: 42.02, costa: 41.13, sierra: 41.16, selva: 42.42}},
+        {id: 85, name: "Pasamano metálico tubo 3\"", unit: "ml", prices: {lima: 412.34, costa: 403.64, sierra: 403.87, selva: 416.22}},
+        {id: 86, name: "Pasamano metálico tubo 2\"", unit: "ml", prices: {lima: 225.61, costa: 220.85, sierra: 220.98, selva: 227.74}},
+        {id: 87, name: "Pasamano metálico tubo 1\"", unit: "ml", prices: {lima: 171.03, costa: 167.42, sierra: 167.52, selva: 172.64}},
+        {id: 88, name: "Cerco metálico tubo 2\", malla #8", unit: "m2", prices: {lima: 242.15, costa: 237.04, sierra: 237.18, selva: 244.43}},
+        {id: 89, name: "Cerco metálico tubo 2\", malla #10", unit: "m2", prices: {lima: 224.45, costa: 219.72, sierra: 219.84, selva: 226.56}},
+        {id: 90, name: "Cerco metálico tubo 2\", malla #12", unit: "m2", prices: {lima: 201.44, costa: 197.19, sierra: 197.30, selva: 203.34}},
+        {id: 91, name: "Poste/estructura fierro h=4m", unit: "pza", prices: {lima: 535.62, costa: 524.33, sierra: 524.62, selva: 540.66}},
+        {id: 92, name: "Poste/estructura fierro h=2.50m", unit: "pza", prices: {lima: 313.28, costa: 306.68, sierra: 306.85, selva: 316.23}},
+        {id: 93, name: "Sardinel concreto e=0.15m h=0.35 s/pintura", unit: "ml", prices: {lima: 128.50, costa: 125.79, sierra: 125.86, selva: 129.71}},
+        {id: 94, name: "Sardinel concreto e=0.15m h=0.35 c/pintura", unit: "ml", prices: {lima: 141.17, costa: 138.19, sierra: 138.27, selva: 142.50}},
+        {id: 95, name: "Pista o losa de concreto 6\"", unit: "m2", prices: {lima: 197.92, costa: 193.75, sierra: 193.86, selva: 199.78}},
         {id: 96, name: "Trampa de concreto armado para grasa", unit: "m3", prices: {lima: 1356.39, costa: 1327.80, sierra: 1328.54, selva: 1369.17}}
     ];
 
@@ -387,7 +480,6 @@
         if(!hasSaved) {
             updateRegion(); 
         } else {
-            // No resetear categorías al cargar estado guardado
             updateRegion(false); 
             renderObrasList();
         }
@@ -422,14 +514,13 @@
         obrasSelect.innerHTML = '<option value="">-- Seleccionar obra(s) y/o instalación(es) --</option>';
         MASTER_OBRAS_LIST.forEach(obra => {
             const price = obra.prices[regionKey] || 0;
-            obrasSelect.innerHTML += `<option value="${obra.id}" data-val="${price}" data-name="${obra.name}" data-unit="${obra.unit}">${obra.name}</option>`;
+            obrasSelect.innerHTML += `<option value="${obra.id}" data-val="${price}" data-name="${obra.name}" data-unit="${obra.unit}">${obra.name} (${obra.unit})</option>`;
         });
 
         if(geojson) {
             geojson.eachLayer(layer => layer.setStyle(style(layer.feature)));
         }
         
-        // No llamamos a calculate() aquí para evitar resetear valores si estamos cargando estado
         saveState();
     }
 
@@ -446,14 +537,10 @@
     }
 
     function getDepreciationPct(material, state, age) {
-        // Mapeo de estados a índices [MB, B, R, M]
         const stateMap = { 'muy_bueno': 0, 'bueno': 1, 'regular': 2, 'malo': 3 };
         const stateIdx = stateMap[state];
         
-        // Determinar tabla base
         let tableData = (material === 'adobe') ? DEPRECIATION_DATA_ADOBE : DEPRECIATION_DATA_CONCRETO;
-        
-        // Encontrar intervalo de edad
         let years = Object.keys(tableData).map(Number).sort((a,b)=>a-b);
         let validYear = years[0];
         
@@ -461,7 +548,6 @@
             if (age >= y) validYear = y;
         }
         
-        // Si la edad supera el máximo de la tabla, usamos el máximo
         let row = tableData[validYear];
         if (!row) {
             validYear = years[years.length-1];
@@ -566,8 +652,6 @@
         renderObrasList();
         document.getElementById('obraQty').value = '';
         sel.value = "";
-        
-        // No llamamos a calculate() automáticamente, el usuario debe pulsar el botón
     }
 
     function removeObra(id) {
